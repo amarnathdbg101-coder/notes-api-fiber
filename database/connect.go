@@ -3,7 +3,6 @@ package database
 import (
 	"fmt"
 	"log"
-	"notes-api-fiber/internal/model"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -16,7 +15,7 @@ var DB *gorm.DB
 func Connect() {
 	err := godotenv.Load(".env")
 	if err != nil {
-		return
+		log.Fatal("Error loading .env file")
 	}
 
 	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
