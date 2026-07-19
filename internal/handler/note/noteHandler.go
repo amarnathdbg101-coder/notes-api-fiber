@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"notes-api-fiber/database"
 	internal "notes-api-fiber/internal/model"
 
@@ -44,7 +45,9 @@ func CreateNoteHandler(c fiber.Ctx) error {
 func DeleteNoteHandler(c fiber.Ctx) error {
 	db := database.DB
 	var note internal.Note
-	err := db.Where("title = ?", c.Params("title")).First(&note).Error
+	title := c.Query("title")
+	fmt.Println(title)
+	err := db.Where("title ILIKE ?", title).First(&note).Error
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Cannot Find",
@@ -63,7 +66,7 @@ func DeleteNoteHandler(c fiber.Ctx) error {
 func UpdateNoteHandler(c fiber.Ctx) error {
 	db := database.DB
 	var note internal.Note
-	err := db.Where("title = ?", c.Params("title")).First(&note).Error
+	err := db.Where("title ILIKE ?", c.Params("title")).First(&note).Error
 	if err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"error": "Cannot update note",

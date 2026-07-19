@@ -9,7 +9,7 @@ import (
 func SetupNoteRoutes(router fiber.Router) {
 	note := router.Group("/note")
 	note.Post("", internal.CreateNoteHandler)
-	note.Delete("/:title", internal.DeleteNoteHandler)
+	note.Delete("/", internal.DeleteNoteHandler)
 	note.Patch("/:title", internal.UpdateNoteHandler)
 
 }
