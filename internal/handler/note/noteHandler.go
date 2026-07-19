@@ -40,3 +40,45 @@ func CreateNoteHandler(c fiber.Ctx) error {
 		"note": note,
 	})
 }
+
+func DeleteNoteHandler(c fiber.Ctx) error {
+	db := database.DB
+	var note internal.Note
+	err := db.Where("title = ?", c.Params("title")).First(&note).Error
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Cannot Find",
+		})
+	}
+	err = db.Delete(&note).Error
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Cannot delete note",
+		})
+	}
+	return c.Status(fiber.StatusNoContent).JSON(fiber.Map{
+		"error": "Note has been deleted",
+	})
+}
+func UpdateNoteHandler(c fiber.Ctx) error {
+	db := database.DB
+	var note internal.Note
+	err := db.Where("title = ?", c.Params("title")).First(&note).Error
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Cannot update note",
+		})
+	}
+	note.Title = c.Params("title")
+	note.Subtitle = c.Params("subtitle")
+	note.Text = c.Params("text")
+	err = db.Save(&note).Error
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"error": "Cannot update note",
+		})
+	}
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"note": note,
+	})
+}

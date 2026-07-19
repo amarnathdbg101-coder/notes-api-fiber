@@ -3,6 +3,7 @@ package database
 import (
 	"fmt"
 	"log"
+	internal "notes-api-fiber/internal/model"
 	"os"
 
 	"github.com/joho/godotenv"
@@ -35,7 +36,7 @@ func Connect() {
 	log.Println("Connected to database")
 
 	err = DB.AutoMigrate(
-		&model.Note{},
+		internal.Note{},
 	)
 	if err != nil {
 		log.Fatal("Failed to migrate database")
